@@ -73,8 +73,18 @@ export default class ListScreen extends Component {
     }
   };
 
-  _onPressItem = item => {
-    this.props.navigation.navigate("Route", { item: item });
+  deleteRoute = key => {
+    this.setState({
+      routes: this.state.routes.filter(route => route.key !== key)
+    });
+    AsyncStorage.removeItem(key);
+  };
+
+  _onPressItem = (item, posterCount) => {
+    this.props.navigation.navigate("Route", {
+      item: item,
+      posterCount: posterCount
+    });
   };
 
   _renderItem = ({ item }) => {
@@ -86,10 +96,11 @@ export default class ListScreen extends Component {
     return (
       <ListItem
         id={item.key}
-        onPressItem={() => this._onPressItem(item)}
+        onPressItem={() => this._onPressItem(item, posterCount)}
         name={item.name}
         locationsCount={item.locations.length}
         posterCount={posterCount}
+        deleteRoute={() => this.deleteRoute(item.key)}
       />
     );
   };
@@ -110,7 +121,6 @@ export default class ListScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
     backgroundColor: "#fff"
   }
 });

@@ -1,13 +1,68 @@
 import React, { Component } from "react";
-import { View, Text, Button, Platform, AsyncStorage } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  Platform,
+  AsyncStorage,
+  TouchableHighlight,
+  StyleSheet
+} from "react-native";
 import { Constants, Location, Permissions, MapView } from "expo";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 export class RouteScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.getParam("item", "test").name,
       headerRight: (
-        <Text>{navigation.getParam("item", "test").locations.length}</Text>
+        <View
+          style={{
+            backgroundColor: "#ff453a",
+            borderRadius: 5,
+            flexDirection: "row",
+            flex: 1,
+            marginRight: 15,
+            paddingTop: 5,
+            paddingBottom: 5,
+            paddingLeft: 10,
+            paddingRight: 10,
+            alignItems: "center"
+          }}
+        >
+          <AntDesign
+            name="file1"
+            size={12}
+            color="white"
+            style={{ paddingTop: 3 }}
+          />
+          <Text
+            style={{
+              color: "#fff",
+              fontSize: 15,
+              marginRight: 15,
+              marginLeft: 5
+            }}
+          >
+            {navigation.getParam("posterCount", 0)}
+          </Text>
+          <AntDesign
+            name="pushpino"
+            size={14}
+            color="white"
+            style={{ paddingTop: 2 }}
+          />
+          <Text
+            style={{
+              color: "white",
+              fontSize: 15,
+              marginRight: 5,
+              marginLeft: 5
+            }}
+          >
+            {navigation.getParam("item", "test").locations.length}
+          </Text>
+        </View>
       )
     };
   };
@@ -139,17 +194,65 @@ export class RouteScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1 }}>
-        <Button onPress={this.addNewLocation} title="Add new Location" />
         <MapView
           style={{ flex: 1 }}
           region={this.state.region}
           onRegionChange={this.onRegionChange}
           showsUserLocation={true}
           loadingEnabled={true}
-        />
+        >
+          {this.state.item.locations.map((marker, i) => (
+            <MapView.Marker
+              coordinate={{
+                latitude: marker.latitude,
+                longitude: marker.longitude
+              }}
+              title={"Ahoi"}
+              key={i}
+            />
+          ))}
+        </MapView>
+
+        <TouchableHighlight
+          style={styles.addButton}
+          onPress={this.addNewLocation}
+        >
+          <Ionicons
+            name="ios-add"
+            size={40}
+            color="white"
+            style={styles.addIcon}
+          />
+        </TouchableHighlight>
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+  addButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#ff453a",
+    alignSelf: "flex-end",
+    borderRadius: 28,
+    height: 56,
+    width: 56,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
 
+    elevation: 6
+  },
+  addIcon: {
+    marginLeft: 2,
+    marginTop: 4
+  }
+});
 export default RouteScreen;
