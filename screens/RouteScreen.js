@@ -6,16 +6,49 @@ import {
   Platform,
   AsyncStorage,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   StyleSheet
 } from "react-native";
 import { Constants, Location, Permissions, MapView } from "expo";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, AntDesign, FontAwesome } from "@expo/vector-icons";
 import LocationDetail from "../components/LocationDetail";
+import DropdownRouteStats from "../components/DropdownRouteStats";
 
 export class RouteScreen extends Component {
   static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
     return {
-      title: navigation.getParam("item", "test").name,
+      headerTitle: (
+        <TouchableWithoutFeedback onPress={() => params.showDropdown()}>
+          <View
+            style={{
+              flexDirection: "row",
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center"
+            }}
+          >
+            <Text style={{ fontSize: 18 }}>
+              {navigation.getParam("item", "test").name}
+            </Text>
+            {navigation.getParam("showingDropdown") ? (
+              <Ionicons
+                name="ios-arrow-up"
+                size={20}
+                color="grey"
+                style={{ marginLeft: 3, paddingTop: 3 }}
+              />
+            ) : (
+              <Ionicons
+                name="ios-arrow-down"
+                size={20}
+                color="grey"
+                style={{ marginLeft: 3, paddingTop: 3 }}
+              />
+            )}
+          </View>
+        </TouchableWithoutFeedback>
+      ),
       headerRight: (
         <View
           style={{
@@ -72,14 +105,31 @@ export class RouteScreen extends Component {
     errorMessage: null,
     item: this.props.navigation.getParam("item", "test"),
     userLocation: null,
-    region: this.props.navigation.getParam("initialRegion")
+    showDropdown: false
   };
 
   componentDidMount() {
     this._watchLocationAsync();
+
+    this.props.navigation.setParams({
+      showDropdown: this.changeDropdownShowing,
+      showingDropdown: this.state.showDropdown
+    });
   }
 
+  changeDropdownShowing = () => {
+    this.setState({
+      showDropdown: !this.state.showDropdown
+    });
+  };
+
   async componentDidUpdate(prevProps, prevState) {
+    if (this.state.showDropdown !== prevState.showDropdown) {
+      this.props.navigation.setParams({
+        showingDropdown: this.state.showDropdown
+      });
+    }
+
     if (this.state.item !== prevState.item) {
       this.props.navigation.setParams({ item: this.state.item });
       try {
@@ -154,19 +204,21 @@ export class RouteScreen extends Component {
     this.locationSubscription = await Location.watchPositionAsync(
       {},
       location => {
-        const newState = {
-          userLocation: [location.coords.latitude, location.coords.longitude]
-        };
-
         if (!this.state.userLocation && this.state.item.locations.length < 1) {
-          newState.region = {
-            ...this.state.region,
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude
-          };
+          this.map.animateCamera(
+            {
+              center: {
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude
+              }
+            },
+            { duration: 200 }
+          );
         }
 
-        this.setState(newState);
+        this.setState({
+          userLocation: [location.coords.latitude, location.coords.longitude]
+        });
       }
     );
   };
@@ -179,18 +231,31 @@ export class RouteScreen extends Component {
     console.log(location);
   };
 
+  resetRegion = () => {
+    this.map.animateToRegion(
+      {
+        latitude: this.state.userLocation[0],
+        longitude: this.state.userLocation[1]
+      },
+      200
+    );
+  };
+
   render() {
     return (
       <View style={{ flex: 1 }}>
         <MapView
           style={{ flex: 1 }}
-          region={this.state.region}
-          onRegionChange={this.onRegionChange}
+          initialRegion={this.props.navigation.getParam("initialRegion")}
+          //onRegionChangeComplete={this.onRegionChange}
           showsUserLocation={true}
-          loadingEnabled={true}
+          ref={map => {
+            this.map = map;
+          }}
         >
           {this.state.item.locations.map((marker, i) => (
             <MapView.Marker
+              draggable
               coordinate={{
                 latitude: marker.latitude,
                 longitude: marker.longitude
@@ -198,10 +263,27 @@ export class RouteScreen extends Component {
               title={"Ahoi"}
               key={i}
               onPress={this.markerPressed}
-              draggable={true}
+              // for draggable markers
+              //onDragEnd={(e) => this.setState({ x: e.nativeEvent.coordinate })}
             />
           ))}
         </MapView>
+        <DropdownRouteStats />
+        <TouchableWithoutFeedback onPress={this.resetRegion}>
+          <View
+            style={[
+              styles.resetRegion,
+              { top: this.state.showDropdown ? 60 : 20 }
+            ]}
+          >
+            <FontAwesome
+              name="location-arrow"
+              size={25}
+              color="#ff453a"
+              style={styles.resetLocationIcon}
+            />
+          </View>
+        </TouchableWithoutFeedback>
         <View style={styles.overlays}>
           <TouchableHighlight
             style={styles.addButton}
@@ -250,6 +332,18 @@ const styles = StyleSheet.create({
   addIcon: {
     marginLeft: 2,
     marginTop: 4
+  },
+  resetRegion: {
+    position: "absolute",
+    backgroundColor: "white",
+    right: 15,
+    padding: 10,
+    borderRadius: 7,
+    alignSelf: "flex-end",
+    height: 45,
+    width: 45,
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
 export default RouteScreen;
