@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View, TouchableHighlight, StyleSheet, Share } from "react-native";
 import { EvilIcons } from "@expo/vector-icons";
 
-export default class ListItem extends React.Component {
+export default class Share extends React.Component {
 
   async onShare = () => {
       try {
