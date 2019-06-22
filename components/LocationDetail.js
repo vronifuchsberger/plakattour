@@ -53,61 +53,65 @@ export default class LocationDetail extends React.Component {
             }
           ]}
         >
-          <View style={styles.upperArea}>
-            <View style={styles.textBox}>
-              <Text style={styles.primaryText}>This is my details box.</Text>
-              <Text style={styles.secondaryText}>This is my details box.</Text>
+          <View style={styles.wrapper2}>
+            <View style={styles.upperArea}>
+              <View style={styles.textBox}>
+                <Text style={styles.primaryText}>This is my details box.</Text>
+                <Text style={styles.secondaryText}>
+                  This is my details box.
+                </Text>
+              </View>
+              <Animated.View style={{ opacity: this.state.height }}>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={this.closeDetail}
+                >
+                  <Ionicons name="ios-close-circle" size={30} color="#E3E3E5" />
+                </TouchableOpacity>
+              </Animated.View>
             </View>
-            <Animated.View style={{ opacity: this.state.height }}>
-              <TouchableOpacity
-                style={styles.closeButton}
-                onPress={this.closeDetail}
-              >
-                <Ionicons name="ios-close-circle" size={30} color="#E3E3E5" />
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
-          <View style={styles.lowerArea}>
-            <View style={styles.lowerAreaButtons}>
-              <TouchableOpacity
-                onPress={() => console.log("Löschen")}
-                style={styles.button}
-                accessibilityLabel="Lösche diese Location"
-              >
-                <Text style={styles.buttonText}>Löschen</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => console.log("Abgehängt")}
-                accessibilityLabel="Markiere Plakate an dieser Stelle als
+            <View style={styles.lowerArea}>
+              <View style={styles.lowerAreaButtons}>
+                <TouchableOpacity
+                  onPress={() => console.log("Löschen")}
+                  style={styles.button}
+                  accessibilityLabel="Lösche diese Location"
+                >
+                  <Text style={styles.buttonText}>Löschen</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => console.log("Abgehängt")}
+                  accessibilityLabel="Markiere Plakate an dieser Stelle als
               abgehängt"
-                style={styles.button}
-              >
-                <Text style={styles.buttonText}>Abgehängt</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.rowText}>Anzahl</Text>
-              <UIStepper
-                onValueChange={value => {
-                  console.log(value);
-                }}
-                displayValue={true}
-                tintColor={"#ff453a"}
-                borderColor={"#ff453a"}
-                textColor={"#ff453a"}
-              />
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.rowText}>fehlend oder kaputt</Text>
-              <UIStepper
-                onValueChange={value => {
-                  console.log(value);
-                }}
-                displayValue={true}
-                tintColor={"#ff453a"}
-                borderColor={"#ff453a"}
-                textColor={"#ff453a"}
-              />
+                  style={styles.button}
+                >
+                  <Text style={styles.buttonText}>Abgehängt</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.rowText}>Anzahl</Text>
+                <UIStepper
+                  onValueChange={value => {
+                    console.log(value);
+                  }}
+                  displayValue={true}
+                  tintColor={"#ff453a"}
+                  borderColor={"#ff453a"}
+                  textColor={"#ff453a"}
+                />
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.rowText}>fehlend oder kaputt</Text>
+                <UIStepper
+                  onValueChange={value => {
+                    console.log(value);
+                  }}
+                  displayValue={true}
+                  tintColor={"#ff453a"}
+                  borderColor={"#ff453a"}
+                  textColor={"#ff453a"}
+                />
+              </View>
             </View>
           </View>
         </Animated.View>
@@ -119,11 +123,18 @@ export default class LocationDetail extends React.Component {
 const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: "white",
-    flex: 1,
     borderRadius: 10,
     padding: 10,
-    overflow: "hidden"
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3
+    },
+    shadowOpacity: 0.27,
+    shadowRadius: 4.65,
+    elevation: 6
   },
+  wrapper2: { overflow: "hidden", flex: 1 },
   upperArea: {
     flexDirection: "row"
   },
