@@ -24,7 +24,8 @@ export default class LocationDetail extends React.Component {
       // Animate value over time
       this.state.height, // The value to drive
       {
-        toValue: 0 // Animate to final value of 1
+        toValue: 0,
+        duration: 250
       }
     ).start(); // Start the animation
   };
@@ -34,7 +35,8 @@ export default class LocationDetail extends React.Component {
       // Animate value over time
       this.state.height, // The value to drive
       {
-        toValue: 1 // Animate to final value of 1
+        toValue: 1,
+        duration: 300
       }
     ).start(); // Start the animation
   };
@@ -179,7 +181,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    backgroundColor: "blue",
+    backgroundColor: "white",
     height: 30,
     marginTop: 15,
     alignItems: "center"

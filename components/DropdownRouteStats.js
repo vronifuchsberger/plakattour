@@ -3,36 +3,43 @@ import { View, Text, StyleSheet, Animated } from "react-native";
 
 export default class DropdownRouteStats extends React.Component {
   state = {
-    height: 0
+    height: new Animated.Value(0)
   };
 
-  updateHeight = showDropdown => {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.showDropdown !== this.props.showDropdown) {
+      this.updateHeight();
+    }
+  }
+
+  updateHeight = () => {
     Animated.timing(
       // Animate value over time
       this.state.height, // The value to drive
       {
-        toValue: 100 // Animate to final value of 1
+        toValue: this.props.showDropdown ? 50 : 0,
+        duration: 200
       }
     ).start();
   };
 
   render() {
     return (
-      <Animated.View style={[styles.wrapper, { height: this.props.height }]}>
+      <Animated.View style={[styles.wrapper, { height: this.state.height }]}>
         <View style={styles.stat}>
-          <Text>5</Text>
+          <Text>{this.props.posterCount}</Text>
           <Text>Plakate</Text>
         </View>
         <View style={styles.stat}>
-          <Text>5</Text>
+          <Text>{this.props.locationCount}</Text>
           <Text>Standorte</Text>
         </View>
         <View style={styles.stat}>
-          <Text>5</Text>
+          <Text>{this.props.collectedCount}</Text>
           <Text>Abgehängt</Text>
         </View>
         <View style={styles.stat}>
-          <Text>5</Text>
+          <Text>{this.props.lostCount}</Text>
           <Text>Verlust</Text>
         </View>
       </Animated.View>

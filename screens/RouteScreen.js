@@ -117,12 +117,6 @@ export class RouteScreen extends Component {
     });
   }
 
-  changeDropdownShowing = () => {
-    this.setState({
-      showDropdown: !this.state.showDropdown
-    });
-  };
-
   async componentDidUpdate(prevProps, prevState) {
     if (this.state.showDropdown !== prevState.showDropdown) {
       this.props.navigation.setParams({
@@ -149,6 +143,36 @@ export class RouteScreen extends Component {
       this.locationSubscription.remove();
     }
   }
+
+  calculateLostPosters = () => {
+    let lost = 0;
+    for (location of this.state.item.locations) {
+      lost += location.lost;
+    }
+    return lost;
+  };
+
+  calculatePosterCount = () => {
+    let posterCount = 0;
+    for (location of this.state.item.locations) {
+      posterCount += location.count;
+    }
+    return posterCount;
+  };
+
+  calculateCollectedPosters = () => {
+    let collected = 0;
+    for (location of this.state.item.locations) {
+      collected += location.collected;
+    }
+    return collected;
+  };
+
+  changeDropdownShowing = () => {
+    this.setState({
+      showDropdown: !this.state.showDropdown
+    });
+  };
 
   addNewLocation = () => {
     if (Platform.OS === "android" && !Constants.isDevice) {
@@ -185,7 +209,9 @@ export class RouteScreen extends Component {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               count: 1,
-              note: ""
+              note: "",
+              lost: 0,
+              collected: 0
             }
           ]
         }
@@ -204,15 +230,17 @@ export class RouteScreen extends Component {
     this.locationSubscription = await Location.watchPositionAsync(
       {},
       location => {
-        if (!this.state.userLocation && this.state.item.locations.length < 1) {
-          this.map.animateCamera(
+        if (
+          this.map &&
+          !this.state.userLocation &&
+          this.state.item.locations.length < 1
+        ) {
+          this.map.animateToRegion(
             {
-              center: {
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude
-              }
+              latitude: location.coords.latitude,
+              longitude: location.coords.longitude
             },
-            { duration: 200 }
+            200
           );
         }
 
@@ -268,7 +296,13 @@ export class RouteScreen extends Component {
             />
           ))}
         </MapView>
-        <DropdownRouteStats />
+        <DropdownRouteStats
+          showDropdown={this.state.showDropdown}
+          posterCount={this.calculatePosterCount()}
+          locationCount={(this.state.item.locations || []).length}
+          collectedCount={this.calculateCollectedPosters()}
+          lostCount={this.calculateLostPosters()}
+        />
         <TouchableWithoutFeedback onPress={this.resetRegion}>
           <View
             style={[
