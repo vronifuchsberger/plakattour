@@ -10,7 +10,14 @@ import { AsyncStorage } from "react-native";
 
 export default createAppContainer(
   createStackNavigator({
-    RoutesList: { screen: ListScreen },
-    Route: { screen: RouteScreen }
+    RoutesList: {
+      screen: ListScreen,
+      navigationOptions: {
+        headerBackTitle: "Touren"
+      }
+    },
+    Route: {
+      screen: RouteScreen
+    }
   })
 );

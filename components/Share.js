@@ -6,9 +6,9 @@ import {
   StyleSheet,
   Share
 } from "react-native";
-import { EvilIcons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
-export default class Share extends React.Component {
+export default class extends React.Component {
   async onShare() {
     try {
       const result = await Share.share({
@@ -33,10 +33,10 @@ export default class Share extends React.Component {
     return (
       <TouchableHighlight onPress={this.onShare}>
         <View style={styles.wrapper}>
-          <EvilIcons
-            name="share-apple"
-            size={26}
-            color="#C7C7CC"
+          <Feather
+            name="share"
+            size={22}
+            color="#ff453a"
             style={styles.shareIcon}
           />
         </View>
@@ -45,9 +45,13 @@ export default class Share extends React.Component {
   }
 }
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: "red"
+    backgroundColor: "white",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 9
   },
   shareIcon: {}
 });

@@ -11,7 +11,7 @@ import {
   StyleSheet,
   Animated
 } from "react-native";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons, AntDesign, Feather } from "@expo/vector-icons";
 import UIStepper from "react-native-ui-stepper";
 
 export default class LocationDetail extends React.Component {
@@ -76,9 +76,10 @@ export default class LocationDetail extends React.Component {
               <View style={styles.lowerAreaButtons}>
                 <TouchableOpacity
                   onPress={() => console.log("Löschen")}
-                  style={styles.button}
+                  style={[styles.button, { marginRight: 10 }]}
                   accessibilityLabel="Lösche diese Location"
                 >
+                  <Feather name="trash-2" size={20} color="#ff453a" />
                   <Text style={styles.buttonText}>Löschen</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -87,6 +88,7 @@ export default class LocationDetail extends React.Component {
               abgehängt"
                   style={styles.button}
                 >
+                  <Feather name="check-square" size={20} color="#ff453a" />
                   <Text style={styles.buttonText}>Abgehängt</Text>
                 </TouchableOpacity>
               </View>
@@ -100,9 +102,11 @@ export default class LocationDetail extends React.Component {
                   tintColor={"#ff453a"}
                   borderColor={"#ff453a"}
                   textColor={"#ff453a"}
+                  fontSize={16}
+                  imageWidth={11}
                 />
               </View>
-              <View style={styles.row}>
+              <View style={[styles.row, { marginTop: 10 }]}>
                 <Text style={styles.rowText}>fehlend oder kaputt</Text>
                 <UIStepper
                   onValueChange={value => {
@@ -112,6 +116,8 @@ export default class LocationDetail extends React.Component {
                   tintColor={"#ff453a"}
                   borderColor={"#ff453a"}
                   textColor={"#ff453a"}
+                  fontSize={16}
+                  imageWidth={11}
                 />
               </View>
             </View>
@@ -160,33 +166,32 @@ const styles = StyleSheet.create({
   },
   lowerAreaButtons: {
     flexDirection: "row",
-    flex: 1
+    flex: 1,
+    marginTop: 15
   },
   button: {
-    backgroundColor: "#E3E3E5",
+    backgroundColor: "#F2F2F7",
     borderRadius: 5,
-    marginTop: 15,
-    marginLeft: 10,
-    marginRight: 10,
+    marginBottom: 15,
     flexGrow: 1,
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    height: 40
+    justifyContent: "center"
   },
   buttonText: {
     color: "#ff453a",
-    fontSize: 17
+    fontSize: 13,
+    marginTop: 5
   },
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "white",
-    height: 30,
-    marginTop: 15,
+    height: 40,
     alignItems: "center"
   },
   rowText: {
-    fontSize: 17
+    fontSize: 18,
+    fontWeight: "500"
   }
 });

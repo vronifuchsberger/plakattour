@@ -7,12 +7,14 @@ import {
   AsyncStorage,
   TouchableHighlight,
   TouchableWithoutFeedback,
-  StyleSheet
+  StyleSheet,
+  Animated
 } from "react-native";
 import { Constants, Location, Permissions, MapView } from "expo";
 import { Ionicons, AntDesign, FontAwesome } from "@expo/vector-icons";
 import LocationDetail from "../components/LocationDetail";
 import DropdownRouteStats from "../components/DropdownRouteStats";
+import Share from "../components/Share";
 
 export class RouteScreen extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -28,76 +30,28 @@ export class RouteScreen extends Component {
               alignItems: "center"
             }}
           >
-            <Text style={{ fontSize: 18 }}>
+            <Text style={{ fontSize: 18, fontWeight: "600" }}>
               {navigation.getParam("item", "test").name}
             </Text>
             {navigation.getParam("showingDropdown") ? (
               <Ionicons
                 name="ios-arrow-up"
-                size={20}
-                color="grey"
-                style={{ marginLeft: 3, paddingTop: 3 }}
+                size={18}
+                color="#C7C7CC"
+                style={{ marginLeft: 5, paddingTop: 3 }}
               />
             ) : (
               <Ionicons
                 name="ios-arrow-down"
-                size={20}
-                color="grey"
-                style={{ marginLeft: 3, paddingTop: 3 }}
+                size={18}
+                color="#C7C7CC"
+                style={{ marginLeft: 5, paddingTop: 3 }}
               />
             )}
           </View>
         </TouchableWithoutFeedback>
       ),
-      headerRight: (
-        <View
-          style={{
-            backgroundColor: "#ff453a",
-            borderRadius: 5,
-            flexDirection: "row",
-            flex: 1,
-            marginRight: 15,
-            paddingTop: 5,
-            paddingBottom: 5,
-            paddingLeft: 10,
-            paddingRight: 10,
-            alignItems: "center"
-          }}
-        >
-          <AntDesign
-            name="file1"
-            size={12}
-            color="white"
-            style={{ paddingTop: 3 }}
-          />
-          <Text
-            style={{
-              color: "#fff",
-              fontSize: 15,
-              marginRight: 15,
-              marginLeft: 5
-            }}
-          >
-            {navigation.getParam("posterCount", 0)}
-          </Text>
-          <AntDesign
-            name="pushpino"
-            size={14}
-            color="white"
-            style={{ paddingTop: 2 }}
-          />
-          <Text
-            style={{
-              color: "white",
-              fontSize: 15,
-              marginRight: 5,
-              marginLeft: 5
-            }}
-          >
-            {navigation.getParam("item", "test").locations.length}
-          </Text>
-        </View>
-      )
+      headerRight: <Share />
     };
   };
 
@@ -105,7 +59,8 @@ export class RouteScreen extends Component {
     errorMessage: null,
     item: this.props.navigation.getParam("item", "test"),
     userLocation: null,
-    showDropdown: false
+    showDropdown: false,
+    locateMeOffset: new Animated.Value(15)
   };
 
   componentDidMount() {
@@ -169,6 +124,10 @@ export class RouteScreen extends Component {
   };
 
   changeDropdownShowing = () => {
+    Animated.timing(this.state.locateMeOffset, {
+      toValue: this.state.showDropdown ? 15 : 75,
+      duration: 200
+    }).start();
     this.setState({
       showDropdown: !this.state.showDropdown
     });
@@ -275,8 +234,9 @@ export class RouteScreen extends Component {
         <MapView
           style={{ flex: 1 }}
           initialRegion={this.props.navigation.getParam("initialRegion")}
-          //onRegionChangeComplete={this.onRegionChange}
           showsUserLocation={true}
+          showsCompass={false}
+          moveOnMarkerPress={true}
           ref={map => {
             this.map = map;
           }}
@@ -304,11 +264,8 @@ export class RouteScreen extends Component {
           lostCount={this.calculateLostPosters()}
         />
         <TouchableWithoutFeedback onPress={this.resetRegion}>
-          <View
-            style={[
-              styles.resetRegion,
-              { top: this.state.showDropdown ? 60 : 20 }
-            ]}
+          <Animated.View
+            style={[styles.resetRegion, { top: this.state.locateMeOffset }]}
           >
             <FontAwesome
               name="location-arrow"
@@ -316,7 +273,7 @@ export class RouteScreen extends Component {
               color="#ff453a"
               style={styles.resetLocationIcon}
             />
-          </View>
+          </Animated.View>
         </TouchableWithoutFeedback>
         <View style={styles.overlays}>
           <TouchableHighlight

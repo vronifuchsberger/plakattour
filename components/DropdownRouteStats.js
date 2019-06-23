@@ -17,7 +17,7 @@ export default class DropdownRouteStats extends React.Component {
       // Animate value over time
       this.state.height, // The value to drive
       {
-        toValue: this.props.showDropdown ? 50 : 0,
+        toValue: this.props.showDropdown ? 60 : 0,
         duration: 200
       }
     ).start();
@@ -27,20 +27,20 @@ export default class DropdownRouteStats extends React.Component {
     return (
       <Animated.View style={[styles.wrapper, { height: this.state.height }]}>
         <View style={styles.stat}>
-          <Text>{this.props.posterCount}</Text>
-          <Text>Plakate</Text>
+          <Text style={styles.number}>{this.props.posterCount}</Text>
+          <Text style={styles.label}>Plakate</Text>
         </View>
         <View style={styles.stat}>
-          <Text>{this.props.locationCount}</Text>
-          <Text>Standorte</Text>
+          <Text style={styles.number}>{this.props.locationCount}</Text>
+          <Text style={styles.label}>Standorte</Text>
         </View>
         <View style={styles.stat}>
-          <Text>{this.props.collectedCount}</Text>
-          <Text>Abgehängt</Text>
+          <Text style={styles.number}>{this.props.collectedCount}</Text>
+          <Text style={styles.label}>Abgehängt</Text>
         </View>
         <View style={styles.stat}>
-          <Text>{this.props.lostCount}</Text>
-          <Text>Verlust</Text>
+          <Text style={styles.number}>{this.props.lostCount}</Text>
+          <Text style={styles.label}>Verlust</Text>
         </View>
       </Animated.View>
     );
@@ -65,11 +65,21 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.27,
     shadowRadius: 4.65,
 
-    elevation: 2
+    elevation: 2,
+    opacity: 0.8
   },
   stat: {
     alignItems: "center",
     marginTop: 10,
     marginBottom: 5
+  },
+  number: {
+    fontSize: 20,
+    fontWeight: "400",
+    color: "#1C1C1E"
+  },
+  label: {
+    color: "#8e8e93",
+    fontWeight: "500"
   }
 });

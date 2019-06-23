@@ -39,7 +39,7 @@ export default class ListItem extends React.PureComponent {
   }
 }
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   itemWrapper: {
     paddingTop: 15,
     marginLeft: 15,
