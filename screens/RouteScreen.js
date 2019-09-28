@@ -10,7 +10,10 @@ import {
   StyleSheet,
   Animated
 } from "react-native";
-import { Constants, Location, Permissions, MapView } from "expo";
+import MapView from "react-native-maps";
+import * as Permissions from "expo-permissions";
+import * as Location from "expo-location";
+import Constants from "expo-constants";
 import { Ionicons, AntDesign, FontAwesome } from "@expo/vector-icons";
 import LocationDetail from "../components/LocationDetail";
 import DropdownRouteStats from "../components/DropdownRouteStats";

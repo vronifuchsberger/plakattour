@@ -16,7 +16,7 @@ export default class LocationDetail extends React.Component {
   };
 
   componentWillMount() {
-    console.log(this.props.index);
+    console.log(this.props.item.locations[this.props.index]);
   }
 
   changeLostCount = value => {

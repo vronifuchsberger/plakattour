@@ -6,7 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   AsyncStorage,
-  AlertIOS,
+  Alert,
   TouchableHighlight
 } from "react-native";
 import ListItem from "../components/ListItem";
@@ -48,7 +48,7 @@ export default class ListScreen extends Component {
 
   clickAdd = () => {
     // TODO: add prompt for Android
-    AlertIOS.prompt(
+    Alert.prompt(
       "Insert tourname",
       null,
       tourName => this.addNewRoute(tourName),

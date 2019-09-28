@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4.65,
 
     elevation: 2,
-    opacity: 0.8
+    opacity: 0.85
   },
   stat: {
     alignItems: "center",
