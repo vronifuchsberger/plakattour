@@ -60,7 +60,11 @@ export class RouteScreen extends Component {
     item: this.props.navigation.getParam("item", "test"),
     userLocation: null,
     showDropdown: false,
-    locateMeOffset: new Animated.Value(15)
+    locateMeOffset: new Animated.Value(15),
+    activeLocationIndex:
+      this.props.navigation.getParam("item", "test").locations.length > 0
+        ? 0
+        : -1
   };
 
   componentDidMount() {
@@ -118,7 +122,9 @@ export class RouteScreen extends Component {
   calculateCollectedPosters = () => {
     let collected = 0;
     for (location of this.state.item.locations) {
-      collected += location.collected;
+      if (location.collected) {
+        collected++;
+      }
     }
     return collected;
   };
@@ -170,7 +176,7 @@ export class RouteScreen extends Component {
               count: 1,
               note: "",
               lost: 0,
-              collected: 0
+              collected: false
             }
           ]
         }
@@ -214,10 +220,6 @@ export class RouteScreen extends Component {
     this.setState({ region });
   };
 
-  onMarkerPressed = location => {
-    console.log(location);
-  };
-
   resetRegion = () => {
     this.map.animateToRegion(
       {
@@ -248,9 +250,8 @@ export class RouteScreen extends Component {
                 latitude: marker.latitude,
                 longitude: marker.longitude
               }}
-              title={"Ahoi"}
               key={i}
-              onPress={this.markerPressed}
+              onPress={() => this.setState({ activeLocationIndex: i })}
               // for draggable markers
               //onDragEnd={(e) => this.setState({ x: e.nativeEvent.coordinate })}
             />
@@ -287,7 +288,13 @@ export class RouteScreen extends Component {
               style={styles.addIcon}
             />
           </TouchableHighlight>
-          <LocationDetail />
+          {this.state.item.locations.length > 0 ? (
+            <LocationDetail
+              item={this.state.item}
+              updateItem={item => this.setState({ item })}
+              index={Math.max(this.state.activeLocationIndex, 0)}
+            />
+          ) : null}
         </View>
       </View>
     );

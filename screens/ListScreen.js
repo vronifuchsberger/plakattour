@@ -34,7 +34,7 @@ export default class ListScreen extends Component {
   };
 
   componentDidMount() {
-    //AsyncStorage.clear();
+    // AsyncStorage.clear();
     this.getAllRoutes();
     this.props.navigation.addListener("willFocus", this.getAllRoutes);
     this.props.navigation.setParams({ clickAdd: this.clickAdd });

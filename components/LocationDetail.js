@@ -2,16 +2,12 @@ import React, { Component } from "react";
 import {
   View,
   Text,
-  Button,
-  Platform,
-  AsyncStorage,
-  TouchableHighlight,
   TouchableWithoutFeedback,
   TouchableOpacity,
   StyleSheet,
   Animated
 } from "react-native";
-import { Ionicons, AntDesign, Feather } from "@expo/vector-icons";
+import { Ionicons, Feather } from "@expo/vector-icons";
 import UIStepper from "react-native-ui-stepper";
 
 export default class LocationDetail extends React.Component {
@@ -19,26 +15,67 @@ export default class LocationDetail extends React.Component {
     height: new Animated.Value(0)
   };
 
+  componentWillMount() {
+    console.log(this.props.index);
+  }
+
+  changeLostCount = value => {
+    const newLocations = [...this.props.item.locations];
+    newLocations[this.props.index] = {
+      ...newLocations[this.props.index],
+      lost: value
+    };
+    this.props.updateItem({
+      ...this.props.item,
+      locations: newLocations
+    });
+  };
+
+  changePosterCount = value => {
+    const newLocations = [...this.props.item.locations];
+    newLocations[this.props.index] = {
+      ...newLocations[this.props.index],
+      count: value
+    };
+    this.props.updateItem({
+      ...this.props.item,
+      locations: newLocations
+    });
+  };
+
+  setCollected = () => {
+    const newLocations = [...this.props.item.locations];
+    newLocations[this.props.index] = {
+      ...newLocations[this.props.index],
+      collected: true
+    };
+    this.props.updateItem({
+      ...this.props.item,
+      locations: newLocations
+    });
+  };
+
+  deleteLocation = () => {
+    const newLocations = this.props.item.locations;
+    newLocations.splice(this.props.index, 1);
+    this.props.updateItem({
+      ...this.props.item,
+      locations: newLocations
+    });
+  };
+
   closeDetail = () => {
-    Animated.timing(
-      // Animate value over time
-      this.state.height, // The value to drive
-      {
-        toValue: 0,
-        duration: 250
-      }
-    ).start(); // Start the animation
+    Animated.timing(this.state.height, {
+      toValue: 0,
+      duration: 250
+    }).start();
   };
 
   openDetail = () => {
-    Animated.timing(
-      // Animate value over time
-      this.state.height, // The value to drive
-      {
-        toValue: 1,
-        duration: 300
-      }
-    ).start(); // Start the animation
+    Animated.timing(this.state.height, {
+      toValue: 1,
+      duration: 300
+    }).start();
   };
 
   render() {
@@ -58,7 +95,9 @@ export default class LocationDetail extends React.Component {
           <View style={styles.wrapper2}>
             <View style={styles.upperArea}>
               <View style={styles.textBox}>
-                <Text style={styles.primaryText}>This is my details box.</Text>
+                <Text style={styles.primaryText}>
+                  {this.props.index}This is my details box.
+                </Text>
                 <Text style={styles.secondaryText}>
                   This is my details box.
                 </Text>
@@ -75,7 +114,7 @@ export default class LocationDetail extends React.Component {
             <View style={styles.lowerArea}>
               <View style={styles.lowerAreaButtons}>
                 <TouchableOpacity
-                  onPress={() => console.log("Löschen")}
+                  onPress={this.deleteLocation}
                   style={[styles.button, { marginRight: 10 }]}
                   accessibilityLabel="Lösche diese Location"
                 >
@@ -83,9 +122,8 @@ export default class LocationDetail extends React.Component {
                   <Text style={styles.buttonText}>Löschen</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => console.log("Abgehängt")}
-                  accessibilityLabel="Markiere Plakate an dieser Stelle als
-              abgehängt"
+                  onPress={this.setCollected}
+                  accessibilityLabel="Markiere Plakate an dieser Stelle als abgehängt"
                   style={styles.button}
                 >
                   <Feather name="check-square" size={20} color="#ff453a" />
@@ -95,29 +133,34 @@ export default class LocationDetail extends React.Component {
               <View style={styles.row}>
                 <Text style={styles.rowText}>Anzahl</Text>
                 <UIStepper
-                  onValueChange={value => {
-                    console.log(value);
-                  }}
+                  onValueChange={this.changePosterCount}
                   displayValue={true}
                   tintColor={"#ff453a"}
                   borderColor={"#ff453a"}
                   textColor={"#ff453a"}
                   fontSize={16}
                   imageWidth={11}
+                  initialValue={
+                    this.props.item.locations[this.props.index].count
+                  }
                 />
               </View>
               <View style={[styles.row, { marginTop: 10 }]}>
                 <Text style={styles.rowText}>fehlend oder kaputt</Text>
                 <UIStepper
-                  onValueChange={value => {
-                    console.log(value);
-                  }}
+                  onValueChange={this.changeLostCount}
                   displayValue={true}
                   tintColor={"#ff453a"}
                   borderColor={"#ff453a"}
                   textColor={"#ff453a"}
                   fontSize={16}
                   imageWidth={11}
+                  initialValue={
+                    this.props.item.locations[this.props.index].lost
+                  }
+                  maximumValue={
+                    this.props.item.locations[this.props.index].count
+                  }
                 />
               </View>
             </View>
