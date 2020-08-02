@@ -18,7 +18,8 @@ export default class DropdownRouteStats extends React.Component {
       this.state.height, // The value to drive
       {
         toValue: this.props.showDropdown ? 60 : 0,
-        duration: 200
+        duration: 200,
+        useNativeDriver: true,
       }
     ).start();
   };
