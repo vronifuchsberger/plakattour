@@ -1,45 +1,45 @@
-import React, { Component } from "react";
+import React from 'react';
 import {
   View,
   Text,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  StyleSheet,
-  Animated
-} from "react-native";
-import { Ionicons, Feather } from "@expo/vector-icons";
-import UIStepper from "react-native-ui-stepper";
+  Animated,
+} from 'react-native';
+import { Ionicons, Feather } from '@expo/vector-icons';
+import UIStepper from 'react-native-ui-stepper';
+import styles from './LocationDetail.styles';
 
 export default class LocationDetail extends React.Component {
   state = {
-    height: new Animated.Value(0)
+    height: new Animated.Value(0),
   };
 
   componentWillMount() {
     console.log(this.props.item.locations[this.props.index]);
   }
 
-  changeLostCount = value => {
+  changeLostCount = (value) => {
     const newLocations = [...this.props.item.locations];
     newLocations[this.props.index] = {
       ...newLocations[this.props.index],
-      lost: value
+      lost: value,
     };
     this.props.updateItem({
       ...this.props.item,
-      locations: newLocations
+      locations: newLocations,
     });
   };
 
-  changePosterCount = value => {
+  changePosterCount = (value) => {
     const newLocations = [...this.props.item.locations];
     newLocations[this.props.index] = {
       ...newLocations[this.props.index],
-      count: value
+      count: value,
     };
     this.props.updateItem({
       ...this.props.item,
-      locations: newLocations
+      locations: newLocations,
     });
   };
 
@@ -47,11 +47,11 @@ export default class LocationDetail extends React.Component {
     const newLocations = [...this.props.item.locations];
     newLocations[this.props.index] = {
       ...newLocations[this.props.index],
-      collected: true
+      collected: true,
     };
     this.props.updateItem({
       ...this.props.item,
-      locations: newLocations
+      locations: newLocations,
     });
   };
 
@@ -60,21 +60,21 @@ export default class LocationDetail extends React.Component {
     newLocations.splice(this.props.index, 1);
     this.props.updateItem({
       ...this.props.item,
-      locations: newLocations
+      locations: newLocations,
     });
   };
 
   closeDetail = () => {
     Animated.timing(this.state.height, {
       toValue: 0,
-      duration: 250
+      duration: 250,
     }).start();
   };
 
   openDetail = () => {
     Animated.timing(this.state.height, {
       toValue: 1,
-      duration: 300
+      duration: 300,
     }).start();
   };
 
@@ -88,8 +88,8 @@ export default class LocationDetail extends React.Component {
               height: Animated.add(
                 65,
                 Animated.multiply(this.state.height, 200)
-              )
-            }
+              ),
+            },
           ]}
         >
           <View style={styles.wrapper2}>
@@ -107,7 +107,7 @@ export default class LocationDetail extends React.Component {
                   style={styles.closeButton}
                   onPress={this.closeDetail}
                 >
-                  <Ionicons name="ios-close-circle" size={30} color="#E3E3E5" />
+                  <Ionicons name='ios-close-circle' size={30} color='#E3E3E5' />
                 </TouchableOpacity>
               </Animated.View>
             </View>
@@ -116,17 +116,17 @@ export default class LocationDetail extends React.Component {
                 <TouchableOpacity
                   onPress={this.deleteLocation}
                   style={[styles.button, { marginRight: 10 }]}
-                  accessibilityLabel="Lösche diese Location"
+                  accessibilityLabel='Lösche diese Location'
                 >
-                  <Feather name="trash-2" size={20} color="#ff453a" />
+                  <Feather name='trash-2' size={20} color='#ff453a' />
                   <Text style={styles.buttonText}>Löschen</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={this.setCollected}
-                  accessibilityLabel="Markiere Plakate an dieser Stelle als abgehängt"
+                  accessibilityLabel='Markiere Plakate an dieser Stelle als abgehängt'
                   style={styles.button}
                 >
-                  <Feather name="check-square" size={20} color="#ff453a" />
+                  <Feather name='check-square' size={20} color='#ff453a' />
                   <Text style={styles.buttonText}>Abgehängt</Text>
                 </TouchableOpacity>
               </View>
@@ -135,9 +135,9 @@ export default class LocationDetail extends React.Component {
                 <UIStepper
                   onValueChange={this.changePosterCount}
                   displayValue={true}
-                  tintColor={"#ff453a"}
-                  borderColor={"#ff453a"}
-                  textColor={"#ff453a"}
+                  tintColor={'#ff453a'}
+                  borderColor={'#ff453a'}
+                  textColor={'#ff453a'}
                   fontSize={16}
                   imageWidth={11}
                   initialValue={
@@ -150,9 +150,9 @@ export default class LocationDetail extends React.Component {
                 <UIStepper
                   onValueChange={this.changeLostCount}
                   displayValue={true}
-                  tintColor={"#ff453a"}
-                  borderColor={"#ff453a"}
-                  textColor={"#ff453a"}
+                  tintColor={'#ff453a'}
+                  borderColor={'#ff453a'}
+                  textColor={'#ff453a'}
                   fontSize={16}
                   imageWidth={11}
                   initialValue={
@@ -170,71 +170,3 @@ export default class LocationDetail extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 10,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
-    elevation: 6
-  },
-  wrapper2: { overflow: "hidden", flex: 1 },
-  upperArea: {
-    flexDirection: "row"
-  },
-  closeButton: {
-    padding: 5
-  },
-  primaryText: {
-    fontWeight: "bold",
-    fontSize: 20
-  },
-  secondaryText: {},
-  textBox: {
-    flex: 1
-  },
-  lowerArea: {
-    borderTopWidth: 1,
-    borderTopColor: "#E3E3E5",
-    marginTop: 15,
-    minHeight: 100,
-    flex: 1
-  },
-  lowerAreaButtons: {
-    flexDirection: "row",
-    flex: 1,
-    marginTop: 15
-  },
-  button: {
-    backgroundColor: "#F2F2F7",
-    borderRadius: 5,
-    marginBottom: 15,
-    flexGrow: 1,
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  buttonText: {
-    color: "#ff453a",
-    fontSize: 13,
-    marginTop: 5
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "white",
-    height: 40,
-    alignItems: "center"
-  },
-  rowText: {
-    fontSize: 18,
-    fontWeight: "500"
-  }
-});

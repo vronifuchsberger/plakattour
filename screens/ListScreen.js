@@ -1,42 +1,40 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
-  Text,
-  Button,
   FlatList,
   ScrollView,
-  StyleSheet,
   AsyncStorage,
   Alert,
-  TouchableHighlight
-} from "react-native";
-import ListItem from "../components/ListItem";
-import { Ionicons } from "@expo/vector-icons";
+  TouchableHighlight,
+} from 'react-native';
+import ListItem from '../components/ListItem';
+import { Ionicons } from '@expo/vector-icons';
+import styles from './ListScreen.styles';
 
 export default class ListScreen extends Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: "Plakattouren",
+      title: 'Plakattouren',
       headerRight: (
-        <TouchableHighlight onPress={navigation.getParam("clickAdd", () => {})}>
+        <TouchableHighlight onPress={navigation.getParam('clickAdd', () => {})}>
           <Ionicons
-            name="ios-add"
+            name='ios-add'
             size={36}
-            color="#0a84ff"
+            color='#0a84ff'
             style={{ marginRight: 18 }}
           />
         </TouchableHighlight>
-      )
+      ),
     };
   };
 
   state = {
-    routes: []
+    routes: [],
   };
 
   componentDidMount() {
     // AsyncStorage.clear();
     this.getAllRoutes();
-    this.props.navigation.addListener("willFocus", this.getAllRoutes);
+    this.props.navigation.addListener('willFocus', this.getAllRoutes);
     this.props.navigation.setParams({ clickAdd: this.clickAdd });
   }
 
@@ -49,18 +47,16 @@ export default class ListScreen extends Component {
   clickAdd = () => {
     // TODO: add prompt for Android
     Alert.prompt(
-      "Insert tourname",
+      'Insert tourname',
       null,
-      tourName => this.addNewRoute(tourName),
-      "plain-text"
+      (tourName) => this.addNewRoute(tourName),
+      'plain-text'
     );
   };
 
-  addNewRoute = async tourName => {
+  addNewRoute = async (tourName) => {
     let date = new Date().toISOString().substring(0, 10);
-    const key = Math.random()
-      .toString(36)
-      .substring(2);
+    const key = Math.random().toString(36).substring(2);
     try {
       await AsyncStorage.setItem(
         key,
@@ -73,9 +69,9 @@ export default class ListScreen extends Component {
     }
   };
 
-  deleteRoute = key => {
+  deleteRoute = (key) => {
     this.setState({
-      routes: this.state.routes.filter(route => route.key !== key)
+      routes: this.state.routes.filter((route) => route.key !== key),
     });
     AsyncStorage.removeItem(key);
   };
@@ -93,7 +89,7 @@ export default class ListScreen extends Component {
         latitude: 51.133481,
         longitude: 10.018343,
         latitudeDelta: 0.1,
-        longitudeDelta: 0.1
+        longitudeDelta: 0.1,
       };
     }
 
@@ -112,15 +108,15 @@ export default class ListScreen extends Component {
       latitude: initialLat,
       longitude: initialLon,
       latitudeDelta: maxLat - minLat + 0.02,
-      longitudeDelta: maxLon - minLon + 0.02
+      longitudeDelta: maxLon - minLon + 0.02,
     };
   }
 
   _onPressItem = (item, posterCount) => {
-    this.props.navigation.navigate("Route", {
+    this.props.navigation.navigate('Route', {
       item: item,
       posterCount: posterCount,
-      initialRegion: this.calculateInitialRegion(item)
+      initialRegion: this.calculateInitialRegion(item),
     });
   };
 
@@ -148,16 +144,9 @@ export default class ListScreen extends Component {
         <FlatList
           data={this.state.routes}
           renderItem={this._renderItem}
-          keyExtractor={item => item.key}
+          keyExtractor={(item) => item.key}
         />
       </ScrollView>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff"
-  }
-});

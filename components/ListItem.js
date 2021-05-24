@@ -1,7 +1,8 @@
-import React, { Component } from "react";
-import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import Swipeout from "react-native-swipeout";
+import React from 'react';
+import { Text, View, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import Swipeout from 'react-native-swipeout';
+import styles from './ListItem.styles';
 
 export default class ListItem extends React.PureComponent {
   _onPress = () => {
@@ -11,26 +12,26 @@ export default class ListItem extends React.PureComponent {
   render() {
     let swipeoutBtns = [
       {
-        text: "Delete",
-        backgroundColor: "#ff453a",
-        onPress: this.props.deleteRoute
-      }
+        text: 'Delete',
+        backgroundColor: '#ff453a',
+        onPress: this.props.deleteRoute,
+      },
     ];
 
     return (
-      <Swipeout right={swipeoutBtns} backgroundColor="white">
+      <Swipeout right={swipeoutBtns} backgroundColor='white'>
         <TouchableOpacity onPress={this._onPress} style={styles.itemWrapper}>
           <View style={styles.textWrapper}>
             <Text style={styles.primaryText}>{this.props.name}</Text>
             <Text style={styles.secondaryText}>
-              {this.props.posterCount} Plakate an {this.props.locationsCount}{" "}
+              {this.props.posterCount} Plakate an {this.props.locationsCount}{' '}
               Standorten
             </Text>
           </View>
           <Ionicons
-            name="ios-arrow-forward"
+            name='ios-arrow-forward'
             size={26}
-            color="#C7C7CC"
+            color='#C7C7CC'
             style={styles.arrow}
           />
         </TouchableOpacity>
@@ -38,32 +39,3 @@ export default class ListItem extends React.PureComponent {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  itemWrapper: {
-    paddingTop: 15,
-    marginLeft: 15,
-    paddingBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E3E3E5",
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white"
-  },
-  textWrapper: {
-    flex: 1
-  },
-  primaryText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 5
-  },
-  secondaryText: {
-    fontSize: 15,
-    color: "#8E8E93"
-  },
-  arrow: {
-    marginRight: 20
-  }
-});

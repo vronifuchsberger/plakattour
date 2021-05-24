@@ -1,18 +1,13 @@
-import React, { Component } from "react";
-import {
-  Text,
-  View,
-  TouchableHighlight,
-  StyleSheet,
-  Share
-} from "react-native";
-import { Feather } from "@expo/vector-icons";
+import React from 'react';
+import { View, TouchableHighlight, Share } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import styles from './Share.styles';
 
 export default class extends React.Component {
   async onShare() {
     try {
       const result = await Share.share({
-        message: "Someday this will be a url to the export file"
+        message: 'Someday this will be a url to the export file',
       });
 
       if (result.action === Share.sharedAction) {
@@ -34,9 +29,9 @@ export default class extends React.Component {
       <TouchableHighlight onPress={this.onShare}>
         <View style={styles.wrapper}>
           <Feather
-            name="share"
+            name='share'
             size={22}
-            color="#ff453a"
+            color='#ff453a'
             style={styles.shareIcon}
           />
         </View>
@@ -44,14 +39,3 @@ export default class extends React.Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    backgroundColor: "white",
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 9
-  },
-  shareIcon: {}
-});

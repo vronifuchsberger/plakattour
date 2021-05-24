@@ -1,23 +1,22 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   View,
   Text,
-  Button,
   Platform,
   AsyncStorage,
   TouchableHighlight,
   TouchableWithoutFeedback,
-  StyleSheet,
-  Animated
-} from "react-native";
-import MapView from "react-native-maps";
-import * as Permissions from "expo-permissions";
-import * as Location from "expo-location";
-import Constants from "expo-constants";
-import { Ionicons, AntDesign, FontAwesome } from "@expo/vector-icons";
-import LocationDetail from "../components/LocationDetail";
-import DropdownRouteStats from "../components/DropdownRouteStats";
-import Share from "../components/Share";
+  Animated,
+} from 'react-native';
+import MapView from 'react-native-maps';
+import * as Permissions from 'expo-permissions';
+import * as Location from 'expo-location';
+import Constants from 'expo-constants';
+import { Ionicons, FontAwesome } from '@expo/vector-icons';
+import LocationDetail from '../components/LocationDetail';
+import DropdownRouteStats from '../components/DropdownRouteStats';
+import Share from '../components/Share';
+import styles from './RouteScreen.styles';
 
 export class RouteScreen extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -27,47 +26,47 @@ export class RouteScreen extends Component {
         <TouchableWithoutFeedback onPress={() => params.showDropdown()}>
           <View
             style={{
-              flexDirection: "row",
+              flexDirection: 'row',
               flex: 1,
-              justifyContent: "center",
-              alignItems: "center"
+              justifyContent: 'center',
+              alignItems: 'center',
             }}
           >
-            <Text style={{ fontSize: 18, fontWeight: "600" }}>
-              {navigation.getParam("item", "test").name}
+            <Text style={{ fontSize: 18, fontWeight: '600' }}>
+              {navigation.getParam('item', 'test').name}
             </Text>
-            {navigation.getParam("showingDropdown") ? (
+            {navigation.getParam('showingDropdown') ? (
               <Ionicons
-                name="ios-arrow-up"
+                name='ios-arrow-up'
                 size={18}
-                color="#C7C7CC"
+                color='#C7C7CC'
                 style={{ marginLeft: 5, paddingTop: 3 }}
               />
             ) : (
               <Ionicons
-                name="ios-arrow-down"
+                name='ios-arrow-down'
                 size={18}
-                color="#C7C7CC"
+                color='#C7C7CC'
                 style={{ marginLeft: 5, paddingTop: 3 }}
               />
             )}
           </View>
         </TouchableWithoutFeedback>
       ),
-      headerRight: <Share />
+      headerRight: <Share />,
     };
   };
 
   state = {
     errorMessage: null,
-    item: this.props.navigation.getParam("item", "test"),
+    item: this.props.navigation.getParam('item', 'test'),
     userLocation: null,
     showDropdown: false,
     locateMeOffset: new Animated.Value(15),
     activeLocationIndex:
-      this.props.navigation.getParam("item", "test").locations.length > 0
+      this.props.navigation.getParam('item', 'test').locations.length > 0
         ? 0
-        : -1
+        : -1,
   };
 
   componentDidMount() {
@@ -75,14 +74,14 @@ export class RouteScreen extends Component {
 
     this.props.navigation.setParams({
       showDropdown: this.changeDropdownShowing,
-      showingDropdown: this.state.showDropdown
+      showingDropdown: this.state.showDropdown,
     });
   }
 
   async componentDidUpdate(prevProps, prevState) {
     if (this.state.showDropdown !== prevState.showDropdown) {
       this.props.navigation.setParams({
-        showingDropdown: this.state.showDropdown
+        showingDropdown: this.state.showDropdown,
       });
     }
 
@@ -135,18 +134,18 @@ export class RouteScreen extends Component {
   changeDropdownShowing = () => {
     Animated.timing(this.state.locateMeOffset, {
       toValue: this.state.showDropdown ? 15 : 75,
-      duration: 200
+      duration: 200,
     }).start();
     this.setState({
-      showDropdown: !this.state.showDropdown
+      showDropdown: !this.state.showDropdown,
     });
   };
 
   addNewLocation = () => {
-    if (Platform.OS === "android" && !Constants.isDevice) {
+    if (Platform.OS === 'android' && !Constants.isDevice) {
       this.setState({
         errorMessage:
-          "Oops, this will not work on Sketch in an Android emulator. Try it on your device!"
+          'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
       });
     } else {
       this._getLocationAsync();
@@ -155,9 +154,9 @@ export class RouteScreen extends Component {
 
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
+    if (status !== 'granted') {
       this.setState({
-        errorMessage: "Permission to access location was denied"
+        errorMessage: 'Permission to access location was denied',
       });
     }
 
@@ -177,27 +176,27 @@ export class RouteScreen extends Component {
               latitude: location.coords.latitude,
               longitude: location.coords.longitude,
               count: 1,
-              note: "",
+              note: '',
               lost: 0,
-              collected: false
-            }
-          ]
-        }
+              collected: false,
+            },
+          ],
+        },
       });
     }
   };
 
   _watchLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== "granted") {
+    if (status !== 'granted') {
       this.setState({
-        errorMessage: "Permission to access location was denied"
+        errorMessage: 'Permission to access location was denied',
       });
     }
 
     this.locationSubscription = await Location.watchPositionAsync(
       {},
-      location => {
+      (location) => {
         if (
           this.map &&
           !this.state.userLocation &&
@@ -206,20 +205,20 @@ export class RouteScreen extends Component {
           this.map.animateToRegion(
             {
               latitude: location.coords.latitude,
-              longitude: location.coords.longitude
+              longitude: location.coords.longitude,
             },
             200
           );
         }
 
         this.setState({
-          userLocation: [location.coords.latitude, location.coords.longitude]
+          userLocation: [location.coords.latitude, location.coords.longitude],
         });
       }
     );
   };
 
-  onRegionChange = region => {
+  onRegionChange = (region) => {
     this.setState({ region });
   };
 
@@ -227,7 +226,7 @@ export class RouteScreen extends Component {
     this.map.animateToRegion(
       {
         latitude: this.state.userLocation[0],
-        longitude: this.state.userLocation[1]
+        longitude: this.state.userLocation[1],
       },
       200
     );
@@ -238,11 +237,11 @@ export class RouteScreen extends Component {
       <View style={{ flex: 1 }}>
         <MapView
           style={{ flex: 1 }}
-          initialRegion={this.props.navigation.getParam("initialRegion")}
+          initialRegion={this.props.navigation.getParam('initialRegion')}
           showsUserLocation={true}
           showsCompass={false}
           moveOnMarkerPress={true}
-          ref={map => {
+          ref={(map) => {
             this.map = map;
           }}
         >
@@ -251,7 +250,7 @@ export class RouteScreen extends Component {
               draggable
               coordinate={{
                 latitude: marker.latitude,
-                longitude: marker.longitude
+                longitude: marker.longitude,
               }}
               key={i}
               onPress={() => this.setState({ activeLocationIndex: i })}
@@ -272,9 +271,9 @@ export class RouteScreen extends Component {
             style={[styles.resetRegion, { top: this.state.locateMeOffset }]}
           >
             <FontAwesome
-              name="location-arrow"
+              name='location-arrow'
               size={25}
-              color="#ff453a"
+              color='#ff453a'
               style={styles.resetLocationIcon}
             />
           </Animated.View>
@@ -285,16 +284,16 @@ export class RouteScreen extends Component {
             onPress={this.addNewLocation}
           >
             <Ionicons
-              name="ios-add"
+              name='ios-add'
               size={40}
-              color="white"
+              color='white'
               style={styles.addIcon}
             />
           </TouchableHighlight>
           {this.state.item.locations.length > 0 ? (
             <LocationDetail
               item={this.state.item}
-              updateItem={item => this.setState({ item })}
+              updateItem={(item) => this.setState({ item })}
               index={Math.max(this.state.activeLocationIndex, 0)}
             />
           ) : null}
@@ -303,48 +302,5 @@ export class RouteScreen extends Component {
     );
   }
 }
-const styles = StyleSheet.create({
-  overlays: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-    left: 20,
-    flex: 1
-  },
-  addButton: {
-    bottom: 10,
-    backgroundColor: "#ff453a",
-    alignSelf: "flex-end",
-    borderRadius: 28,
-    height: 56,
-    width: 56,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3
-    },
-    shadowOpacity: 0.27,
-    shadowRadius: 4.65,
 
-    elevation: 6
-  },
-  addIcon: {
-    marginLeft: 2,
-    marginTop: 4
-  },
-  resetRegion: {
-    position: "absolute",
-    backgroundColor: "white",
-    right: 15,
-    padding: 10,
-    borderRadius: 7,
-    alignSelf: "flex-end",
-    height: 45,
-    width: 45,
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});
 export default RouteScreen;
